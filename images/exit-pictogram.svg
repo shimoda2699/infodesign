@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="46" height="46" role="img" aria-label="非常口を表す緑色のピクトグラム。走る人の姿と出口を示す矢印。">
+  <title>非常口ピクトグラム(イメージ)</title>
+  <rect x="2" y="2" width="56" height="56" rx="4" fill="#0ca30c"/>
+  <rect x="8" y="14" width="10" height="34" fill="none" stroke="#fff" stroke-width="2"/>
+  <circle cx="34" cy="18" r="4" fill="#fff"/>
+  <path d="M34 22 L34 34 L28 44 M34 30 L42 34 L46 26 M34 30 L26 30 M34 34 L40 46" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M20 52 H50 M44 46 L50 52 L44 58" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

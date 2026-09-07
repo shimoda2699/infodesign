@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情報デザインの変遷を見る</title>
+<style>
+  :root{
+    --page:#f4f2ec;
+    --surface:#ffffff;
+    --ink:#0b0b0b;
+    --ink-2:#52514e;
+    --muted:#898781;
+    --line:#e1e0d9;
+    --baseline:#c3c2b7;
+    --accent:#2a78d6;
+    --accent-dark:#1c5cab;
+    --header-bg:#eef1f4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+    background:var(--page);
+    color:var(--ink);
+    line-height:1.85;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:32px 20px 80px;}
+  header.top{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  h1{font-size:23px;margin:0;color:#1c2b3a;}
+  .lead{color:var(--ink-2);font-size:14px;margin:6px 0 22px;}
+
+  nav.stage-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+  .stage-btn{
+    border:1px solid #c9d3dc;background:#fff;color:#2c3e50;
+    padding:9px 16px;border-radius:999px;font-size:14px;cursor:pointer;
+    font-family:inherit;transition:all .15s ease;
+  }
+  .stage-btn:hover{border-color:var(--accent);}
+  .stage-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:bold;}
+
+  .progress{display:flex;gap:4px;margin:10px 0 16px;}
+  .progress span{flex:1;height:4px;background:#dde2e7;border-radius:2px;}
+  .progress span.done{background:var(--accent);}
+
+  .stage-desc{
+    background:var(--header-bg);border-left:4px solid var(--accent);
+    padding:12px 16px;font-size:14px;color:#2c3e50;border-radius:0 6px 6px 0;
+    margin:0 0 28px;
+  }
+
+  #raw-view{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:24px;font-size:15px;color:#333;
+  }
+
+  #structured-view h2{
+    font-size:18px;margin-top:36px;padding:6px 10px;
+    background:var(--header-bg);border-left:5px solid #2c3e50;color:#1c2b3a;
+  }
+  #structured-view h3{font-size:15px;color:#2c3e50;margin-top:20px;}
+  #structured-view p{margin:10px 0;}
+  #structured-view ul{margin:8px 0;padding-left:22px;}
+  #structured-view li{margin:4px 0;}
+
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;}
+  th,td{border:1px solid #b9c2cc;padding:8px 12px;text-align:left;}
+  th{background:#2c3e50;color:#fff;}
+  tr:nth-child(even) td{background:#f4f6f8;}
+
+  .fig{border:1px solid var(--line);background:#fff;border-radius:6px;padding:18px;margin:18px 0;position:relative;}
+  .fig::before{
+    content:attr(data-tag);
+    position:absolute;top:-11px;left:14px;background:var(--accent);color:#fff;
+    font-size:11px;padding:2px 10px;border-radius:999px;font-weight:bold;
+  }
+  .fig-title{margin:6px 0 12px;font-weight:bold;color:#1c2b3a;}
+  .fig-caption{font-size:13px;color:#667;margin-top:6px;}
+  .fig img{display:block;width:100%;height:auto;border-radius:4px;}
+  .fig-source{font-size:11px;color:#9aa0a6;margin-top:4px;}
+  .fig-source code{background:#f2f1ec;padding:1px 5px;border-radius:3px;}
+
+  .icon-row{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 4px;}
+  .icon-item{display:flex;flex-direction:column;align-items:center;width:76px;font-size:11px;color:var(--ink-2);text-align:center;}
+  .icon-badge{width:52px;height:52px;border-radius:50%;background:#eaf2fc;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
+  .icon-badge img{width:26px;height:26px;}
+
+  .inline-fig-row{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin:10px 0;}
+  .inline-fig-row .icon-wrap{flex:0 0 auto;}
+  .inline-fig-row .icon-wrap.footnote-icon{align-self:center;}
+  .inline-fig-row .text-col{flex:1;min-width:220px;}
+
+  .note-box{font-size:13px;color:#555;background:#f6f4ee;border-left:4px solid #c9a227;padding:10px 14px;margin:16px 0;}
+
+  [data-min-stage]{display:none;}
+
+  footer.credit{margin-top:48px;font-size:12px;color:#9aa0a6;text-align:center;}
+
+  @media (max-width:480px){
+    .stage-btn{font-size:12.5px;padding:8px 12px;}
+    h1{font-size:19px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <svg width="38" height="38" viewBox="0 0 40 40" aria-hidden="true">
+      <rect x="2" y="2" width="36" height="36" rx="8" fill="#2a78d6"/>
+      <rect x="10" y="12" width="20" height="3" rx="1.5" fill="#fff"/>
+      <rect x="10" y="19" width="14" height="3" rx="1.5" fill="#bcd6f5"/>
+      <rect x="10" y="26" width="17" height="3" rx="1.5" fill="#bcd6f5"/>
+    </svg>
+    <h1>情報デザインの変遷を見る</h1>
+  </header>
+  <p class="lead">同じ内容の文章が、構造化・抽象化・可視化を経てどのように変わっていくかをボタンで確認できます。</p>
+
+  <nav class="stage-nav" aria-label="表示段階の切り替え">
+    <button class="stage-btn" type="button" data-stage="0">① 原文(デザインなし)</button>
+    <button class="stage-btn" type="button" data-stage="1">② 構造化</button>
+    <button class="stage-btn" type="button" data-stage="2">③ +抽象化</button>
+    <button class="stage-btn" type="button" data-stage="3">④ +可視化</button>
+  </nav>
+  <div class="progress" aria-hidden="true">
+    <span data-p="0"></span><span data-p="1"></span><span data-p="2"></span><span data-p="3"></span>
+  </div>
+  <div class="stage-desc" id="stage-desc"></div>
+
+  <!-- ============ STAGE 0: 生の文章(デザインなし) ============ -->
+  <div id="raw-view">情報デザインとは、社会の中にあるさまざまな情報を受け手に分かりやすく伝えるための手法のことをいう。受け手に対して情報を分かりやすく効率的に伝えるためには、どのような手法があるのかを理解する必要がある。膨大な情報の中から受け手は自分に必要な情報かそうでないかを判断し、情報を効果的に活用しなければならない。そのため情報を発信する側には、受け手の状況に応じて情報の抽象化・可視化・構造化を行う方法や、年齢や障がいの有無、言語や文化などに関係なく情報を伝える方法が必要となる。情報の抽象化とは大量の情報の中から必要なところを取り出すことをいい、例えば銀行やコンビニ、ガソリンスタンド、川、公園、都電の停留所、駅などが書き込まれた地図から、目的地までの道順を示すために必要な情報だけを取り出して示すことなどが挙げられる。情報の可視化とは情報を視覚的に表現することをいい、例えば予定を一覧にまとめた表や、曜日ごとの数値の変化を表す折れ線グラフ、世界の高層建築物の高さを比較したインフォグラフィックスなどが挙げられる。情報の構造化とは要素どうしの関係性を分かりやすく整理することをいい、物事の順序を示す図、条件によって分かれる分岐を示す図、上下関係を示す階層の図、あるものが別のものを含む包含関係の図、複数の要素が重なり合う関係を示す図、全体のばらつきや傾向・分布を示す図などによって表される。このほかにも、湘南台情報技術検定試験の申し込み方法のように、個人申し込みと団体申し込みでそれぞれ受付期間や受験料、必要書類、申し込み方法などが定められている案内文で手続きを説明する例もある。情報を正しく効率的に伝えるためには、ある基準を用いて情報を整理する必要がある。その基準として、場所、アルファベット(50音)、時間、カテゴリー、階層の五つが挙げられる。これはアメリカのリチャード・ソール・ワーマンが提唱したもので、究極の五個の道しるべといわれ、場所(Location)、アルファベット(Alphabet)、時間(Time)、カテゴリー(Category)、階層(Hierarchy)の頭文字を取ってLATCHともよばれる。場所を基準に整理した例としては地図や路線図、座席表があり、アルファベット(50音)を基準に整理した例としては辞書や電話帳、名簿があり、時間を基準に整理した例としては歴史年表やテレビの番組表、時刻表があり、カテゴリーを基準に整理した例としては動物や植物の分類表や鉱物の分類表、図書館があり、階層を基準に整理した例としては組織の系統や、価格の安い順、距離の近い順に並べたものがある。また、整理された情報どうしの結び付きは、並列、順序、分岐、階層、因果などで表現することができる。都道府県を場所の順に並べた場合と五十音順に並べた場合とでは、目的によってどちらが分かりやすいかが変わってくる。このように、情報デザインはさまざまなところで活用されているが、いずれの場合も重要なことは、視覚的にきれいに見せることではなく、相手に理解してもらうためにデザインすることである。インターネットにおける情報発信が社会に浸透していなかった頃は、テレビやラジオ、新聞などのマスメディアが情報伝達の主な手段であった。そのため、多くの人に分かりやすく情報を伝えることが情報デザインの主な目的であった。しかしその後、インターネットの普及により、個人の経験や趣味・嗜好なども考慮した情報発信が可能になったため、情報デザインにおいても、多くの人ではなく、特定の個人に絞った工夫が求められるようになってきた。さらにSNSなどが発展してきた現代では、情報があふれたために、受け手側は自分の主張や考えに沿ったものを取捨選択する、見たいものだけを見る時代になりつつある。情報を受け取る際に思い込みがあると、偏った受け止め方をしてしまう危険がある。たとえば、ある一つの絵を「あひるだ」と思って見るとうさぎに見えていた部分が消えてしまい、「うさぎだ」と思って見るとあひるに見えていた部分が消えてしまうというように、同じ絵でもあひるにもうさぎにも見える図形がある。同様に、見方によって若い女性にも老婆にも見える図形や、向かい合う二人の横顔にも一つの盃にも見える図形もある。学校や役所など建物内に設置されている非常口のピクトグラムは日本人によって考案されたものであり、国際標準化機構(ISO)の規格に採用され、世界の多くの人々に認識されている。関連する内容として、図解表現やピクトグラム、ピクトグラムと東京オリンピック、デザインで問題解決、情報の偏りと閉鎖的な情報収集による問題についても、それぞれ別のページで扱われている。</div>
+
+  <!-- ============ STAGE 1-3: 構造化された本文 ============ -->
+  <div id="structured-view">
+
+    <h2>1. 情報デザインとは</h2>
+    <p>情報デザインとは、社会の中にあるさまざまな情報を受け手に分かりやすく伝えるための手法である。受け手は膨大な情報の中から自分に必要な情報かどうかを判断しなければならないため、発信する側には、受け手の状況(年齢・障がいの有無・言語・文化など)に関係なく情報を伝える工夫が求められる。その工夫は主に次の3つに分けられる。</p>
+    <ul>
+      <li><strong>抽象化</strong>:大量の情報の中から必要な部分だけを取り出すこと</li>
+      <li><strong>可視化</strong>:情報を視覚的に表現すること(例:予定表、折れ線グラフ、インフォグラフィックス)</li>
+      <li><strong>構造化</strong>:要素どうしの関係性を分かりやすく整理すること(例:順序・分岐・階層・包含・重なり・傾向分布を示す図)</li>
+    </ul>
+
+    <div class="fig" data-min-stage="2" data-tag="抽象化の例">
+      <p class="fig-title">地図の抽象化(抽象化前 → 抽象化後)</p>
+      <img src="images/abstraction-map.svg" alt="銀行・コンビニ・GS・公園・都電・家などが並ぶ地図(抽象化前)と、現在地・目印のコンビニ・目的地の駅とその経路だけを残した地図(抽象化後)を並べた比較図">
+      <p class="fig-caption">同じ地図でも、目的(道順を伝える)に不要な銀行・GS・公園・都電・家などの情報を取り除き、現在地・目印・目的地とその経路だけを残すと、伝えたいことが一目で分かるようになる。</p>
+      <p class="fig-source">画像ファイル:<code>images/abstraction-map.svg</code></p>
+    </div>
+
+    <p>このほか、湘南台情報技術検定試験の申し込み方法のように、個人申し込みと団体申し込みで受付期間・受験料・必要書類・申し込み方法を分けて説明する案内文も、情報デザインの一例である。</p>
+
+    <h2>2. 情報デザインの例</h2>
+    <p>情報を正しく効率的に伝えるには、ある基準を用いて整理する必要がある。アメリカのリチャード・ソール・ワーマンは、次の5つを「究極の5個の道しるべ(LATCH)」として提唱した。</p>
+
+    <div class="icon-row" data-min-stage="3">
+      <div class="icon-item"><div class="icon-badge"><img src="images/latch-location.svg" alt="場所のピクトグラム"></div>場所</div>
+      <div class="icon-item"><div class="icon-badge"><img src="images/latch-alphabet.svg" alt="アルファベットのピクトグラム"></div>アルファベット</div>
+      <div class="icon-item"><div class="icon-badge"><img src="images/latch-time.svg" alt="時間のピクトグラム"></div>時間</div>
+      <div class="icon-item"><div class="icon-badge"><img src="images/latch-category.svg" alt="カテゴリーのピクトグラム"></div>カテゴリー</div>
+      <div class="icon-item"><div class="icon-badge"><img src="images/latch-hierarchy.svg" alt="階層のピクトグラム"></div>階層</div>
+    </div>
+
+    <table>
+      <tr><th>基準</th><th>例</th></tr>
+      <tr><td>場所(Location)</td><td>地図、路線図、座席表</td></tr>
+      <tr><td>アルファベット/50音(Alphabet)</td><td>辞書、電話帳、名簿</td></tr>
+      <tr><td>時間(Time)</td><td>歴史年表、テレビの番組表、時刻表</td></tr>
+      <tr><td>カテゴリー(Category)</td><td>動物や植物の分類表、鉱物の分類表、図書館</td></tr>
+      <tr><td>階層(Hierarchy)</td><td>組織の系統、価格の安い順、距離の近い順</td></tr>
+    </table>
+
+    <p>整理された情報どうしの結び付きは、次のような関係で表現できる。</p>
+    <ul>
+      <li>並列</li>
+      <li>順序</li>
+      <li>分岐</li>
+      <li>階層</li>
+      <li>因果</li>
+    </ul>
+    <p>(例:都道府県を「場所順」に並べる場合と「五十音順」に並べる場合とでは、目的によってどちらが分かりやすいかが変わる)</p>
+    <p>重要なのは、視覚的にきれいに見せることではなく、相手に理解してもらうためにデザインすることである。</p>
+
+    <div class="fig" data-min-stage="3" data-tag="可視化の例">
+      <p class="fig-title">可視化のイメージ:同じ数値を「表」「折れ線グラフ」「インフォグラフィックス」で表す</p>
+
+      <table style="margin-bottom:10px;">
+        <tr><th>曜日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th></tr>
+        <tr><td>図書室の来館者数(人)</td><td>12</td><td>18</td><td>15</td><td>22</td><td>30</td></tr>
+      </table>
+      <p class="fig-caption" style="margin-top:0;">表は、日ごとの正確な人数を確認したいときに向いている。</p>
+
+      <img src="images/library-visits-line-chart.svg" alt="図書室の来館者数の折れ線グラフ。月12人、火18人、水15人、木22人、金30人で、水曜に減った後、金曜に向けて増えている。" style="margin-top:8px;">
+      <p class="fig-caption">同じ数値を折れ線グラフにすると、水曜日にいったん減った後、金曜日に向けて増えているという「変化の傾向」が一目で読み取れる。</p>
+      <p class="fig-source">画像ファイル:<code>images/library-visits-line-chart.svg</code></p>
+
+      <img src="images/building-heights-infographic.svg" alt="世界の高い建造物の高さを比較する横棒インフォグラフィックス。ブルジュ・ハリファ828m、東京スカイツリー634m、東京タワー333m、エッフェル塔330m、ギザの大ピラミッド139m。" style="margin-top:14px;">
+      <p class="fig-caption">数値の一覧ではなく長さで比較すると、大小関係を直感的に把握できる。</p>
+      <p class="fig-source">画像ファイル:<code>images/building-heights-infographic.svg</code></p>
+    </div>
+
+    <h2>3. 情報デザインと社会の変遷</h2>
+    <p>1. マスメディアの時代:インターネットが普及する前は、テレビ・ラジオ・新聞などが情報伝達の主な手段だった。目的は「多くの人に分かりやすく伝えること」。</p>
+    <p>2. インターネット普及後:個人の経験や趣味・嗜好を考慮した発信が可能になり、「特定の個人に絞った工夫」が求められるようになった。</p>
+    <p>3. SNS時代(現代):情報があふれ、受け手が自分の主張や考えに沿った情報だけを取捨選択する、いわゆる「見たいものだけを見る」傾向が強まっている。</p>
+
+    <h2>コラム:多義図形</h2>
+    <div class="inline-fig-row">
+      <div class="icon-wrap" data-min-stage="3">
+        <img src="images/ambiguous-figure-icon.svg" alt="見方によって二通りに読み取れることを表す抽象アイコン" width="84" height="84">
+      </div>
+      <div class="text-col">
+        <p>情報を受け取る際に思い込みがあると、偏った受け止め方をしてしまう危険がある。</p>
+        <ul>
+          <li>「あひるだ」と思うとうさぎに見えていた部分が消え、「うさぎだ」と思うとあひるに見えていた部分が消える図形</li>
+          <li>見方によって若い女性にも老婆にも見える図形</li>
+          <li>向かい合う二人の横顔にも一つの盃にも見える図形</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>補足</h2>
+    <div class="inline-fig-row">
+      <div class="icon-wrap footnote-icon" data-min-stage="3">
+        <img src="images/exit-pictogram.svg" alt="非常口ピクトグラム(イメージ)" width="46" height="46">
+      </div>
+      <div class="text-col">
+        <p style="margin:0;">非常口のピクトグラムは日本人が考案したもので、国際標準化機構(ISO)の規格に採用され、世界中で認識されている。</p>
+      </div>
+    </div>
+    <p>関連ページ:図解表現/ピクトグラム/ピクトグラムと東京オリンピック/デザインで問題解決/情報の偏りと閉鎖的な情報収集による問題</p>
+
+  </div>
+
+  <footer class="credit">情報デザイン学習用サンプル(教科書「情報デザイン」をもとに作成) / 図版は images フォルダ内の SVG ファイルを参照しています</footer>
+</div>
+
+<script>
+  var stageLabels = [
+    "デザインされていない状態:情報量は同じでも、どこが要点でどこが具体例か、読み手がゼロから判断しなければならない。",
+    "構造化:見出し・箇条書き・表・番号順によって、情報どうしの関係(階層・並列・順序)が整理された。",
+    "+抽象化:地図の例のように、目的に必要な情報だけを取り出す視点が加わった。",
+    "+可視化:数値や関係を、表・グラフ・インフォグラフィックス・ピクトグラムで直感的に伝えられるようになった(images フォルダの画像ファイルを表示)。"
+  ];
+
+  var stage = 0;
+  var btns = document.querySelectorAll('.stage-btn');
+  var raw = document.getElementById('raw-view');
+  var structured = document.getElementById('structured-view');
+  var desc = document.getElementById('stage-desc');
+  var progressSpans = document.querySelectorAll('.progress span');
+  var minStageEls = document.querySelectorAll('[data-min-stage]');
+
+  function render(){
+    raw.style.display = stage === 0 ? '' : 'none';
+    structured.style.display = stage >= 1 ? '' : 'none';
+
+    minStageEls.forEach(function(el){
+      var min = parseInt(el.getAttribute('data-min-stage'), 10);
+      var visible = stage >= min;
+      if(el.classList.contains('icon-row')){
+        el.style.display = visible ? 'flex' : 'none';
+      } else {
+        el.style.display = visible ? 'block' : 'none';
+      }
+    });
+
+    btns.forEach(function(b){
+      var active = parseInt(b.dataset.stage, 10) === stage;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+
+    progressSpans.forEach(function(s){
+      s.classList.toggle('done', parseInt(s.dataset.p, 10) <= stage);
+    });
+
+    desc.textContent = stageLabels[stage];
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      stage = parseInt(b.dataset.stage, 10);
+      render();
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+  });
+
+  render();
+</script>
+</body>
+</html>

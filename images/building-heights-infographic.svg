@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 185" width="480" height="185" role="img" aria-label="世界の高い建造物の高さを比較する横棒インフォグラフィックス。ブルジュ・ハリファ828メートル、東京スカイツリー634メートル、東京タワー333メートル、エッフェル塔330メートル、ギザの大ピラミッド139メートル。">
+  <title>世界の高い建造物の高さ比較</title>
+  <rect x="0" y="0" width="480" height="185" fill="#ffffff"/>
+  <g font-family="sans-serif">
+    <text x="130" y="24" font-size="12" text-anchor="end" fill="#52514e">ブルジュ・ハリファ</text>
+    <path d="M140,10 H396 A4,4 0 0 1 400,14 V26 A4,4 0 0 1 396,30 H140 Z" fill="#2a78d6"/>
+    <text x="408" y="24" font-size="12" fill="#0b0b0b">828m</text>
+
+    <text x="130" y="59" font-size="12" text-anchor="end" fill="#52514e">東京スカイツリー</text>
+    <path d="M140,45 H335 A4,4 0 0 1 339,49 V61 A4,4 0 0 1 335,65 H140 Z" fill="#2a78d6"/>
+    <text x="347" y="59" font-size="12" fill="#0b0b0b">634m</text>
+
+    <text x="130" y="94" font-size="12" text-anchor="end" fill="#52514e">東京タワー</text>
+    <path d="M140,80 H241 A4,4 0 0 1 245,84 V96 A4,4 0 0 1 241,100 H140 Z" fill="#2a78d6"/>
+    <text x="253" y="94" font-size="12" fill="#0b0b0b">333m</text>
+
+    <text x="130" y="129" font-size="12" text-anchor="end" fill="#52514e">エッフェル塔</text>
+    <path d="M140,115 H240 A4,4 0 0 1 244,119 V131 A4,4 0 0 1 240,135 H140 Z" fill="#2a78d6"/>
+    <text x="252" y="129" font-size="12" fill="#0b0b0b">330m</text>
+
+    <text x="130" y="164" font-size="12" text-anchor="end" fill="#52514e">ギザの大ピラミッド</text>
+    <path d="M140,150 H180 A4,4 0 0 1 184,154 V166 A4,4 0 0 1 180,170 H140 Z" fill="#2a78d6"/>
+    <text x="192" y="164" font-size="12" fill="#0b0b0b">139m</text>
+  </g>
+</svg>

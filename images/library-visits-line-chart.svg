@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 200" width="480" height="200" role="img" aria-label="図書室の来館者数の推移を示す折れ線グラフ。月12人、火18人、水15人、木22人、金30人。">
+  <title>図書室の来館者数(月〜金)の折れ線グラフ</title>
+  <rect x="0" y="0" width="480" height="200" fill="#ffffff"/>
+  <g font-family="sans-serif">
+    <line x1="50" y1="123" x2="430" y2="123" stroke="#e1e0d9" stroke-width="1"/>
+    <line x1="50" y1="77" x2="430" y2="77" stroke="#e1e0d9" stroke-width="1"/>
+    <line x1="50" y1="30" x2="430" y2="30" stroke="#e1e0d9" stroke-width="1"/>
+    <text x="45" y="127" font-size="10" text-anchor="end" fill="#898781">10</text>
+    <text x="45" y="81" font-size="10" text-anchor="end" fill="#898781">20</text>
+    <text x="45" y="34" font-size="10" text-anchor="end" fill="#898781">30</text>
+    <line x1="50" y1="170" x2="430" y2="170" stroke="#c3c2b7" stroke-width="1"/>
+    <text x="70" y="185" font-size="11" text-anchor="middle" fill="#52514e">月</text>
+    <text x="150" y="185" font-size="11" text-anchor="middle" fill="#52514e">火</text>
+    <text x="230" y="185" font-size="11" text-anchor="middle" fill="#52514e">水</text>
+    <text x="310" y="185" font-size="11" text-anchor="middle" fill="#52514e">木</text>
+    <text x="390" y="185" font-size="11" text-anchor="middle" fill="#52514e">金</text>
+    <polyline points="70,114 150,86 230,100 310,67 390,30" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="70" cy="114" r="3.5" fill="#2a78d6"/>
+    <circle cx="150" cy="86" r="3.5" fill="#2a78d6"/>
+    <circle cx="230" cy="100" r="3.5" fill="#2a78d6"/>
+    <circle cx="310" cy="67" r="3.5" fill="#2a78d6"/>
+    <circle cx="390" cy="30" r="6" fill="#fdfcf9"/>
+    <circle cx="390" cy="30" r="4" fill="#2a78d6"/>
+    <text x="400" y="26" font-size="12" font-weight="bold" fill="#0b0b0b">30人</text>
+  </g>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" role="img" aria-label="アルファベット・50音を表す開いた本のピクトグラム">
+  <title>アルファベット/50音(Alphabet)</title>
+  <g fill="none" stroke="#2a78d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 5c2-1 5-1 7 0v14c-2-1-5-1-7 0V5z"/>
+    <path d="M21 5c-2-1-5-1-7 0v14c2-1 5-1 7 0V5z"/>
+  </g>
+</svg>

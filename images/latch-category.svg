@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" role="img" aria-label="カテゴリーを表すタグのピクトグラム">
+  <title>カテゴリー(Category)</title>
+  <g fill="none" stroke="#2a78d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12l9-9h7a1 1 0 0 1 1 1v7l-9 9a1.5 1.5 0 0 1-2 0l-6-6a1.5 1.5 0 0 1 0-2z"/>
+    <circle cx="16" cy="8" r="1.4" fill="#2a78d6" stroke="none"/>
+  </g>
+</svg>
