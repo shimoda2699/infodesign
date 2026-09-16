@@ -217,10 +217,10 @@
   }
   .sub-header h2{font-size:15px; margin:0; font-family:var(--font-friendly);}
 
-  .tabs{display:flex; gap:4px; padding:14px 20px 0; background:#fff;}
+  .tabs{display:flex; gap:4px; padding:14px 20px 0; background:#fff; overflow-x:auto; white-space:nowrap;}
   .tab{
     padding:9px 14px; font-size:13px; border-radius:8px 8px 0 0; cursor:pointer;
-    color:var(--muted); font-weight:600;
+    color:var(--muted); font-weight:600; flex-shrink:0;
   }
   .tab.active{background:var(--cream); color:var(--brand); }
 
@@ -231,6 +231,16 @@
   }
   .plan-box .label{font-size:12px; color:var(--muted); margin-bottom:4px;}
   .plan-box .value{font-family:var(--font-friendly); font-weight:800; font-size:18px;}
+
+  .doc-row{
+    display:flex; align-items:center; gap:10px; padding:11px 8px;
+    border-bottom:1px solid var(--line); cursor:pointer; font-size:13px;
+  }
+  .doc-row:hover{background:var(--brand-light);}
+  .doc-row:last-child{border-bottom:none;}
+  .doc-icon{font-size:15px;}
+  .doc-name{flex:1; color:var(--ink); font-family:'Inter',monospace; font-size:12.5px;}
+  .doc-size{color:var(--muted); font-size:11.5px;}
 
   .big-action{
     display:block; width:100%; max-width:480px; text-align:center;
@@ -261,6 +271,20 @@
   .flow-card .emoji{font-size:38px; margin-bottom:10px;}
   .flow-card h2{font-family:var(--font-friendly); font-size:20px; margin:0 0 10px;}
   .flow-card p.desc{color:var(--muted); font-size:13.5px; line-height:1.7; margin:0 0 22px;}
+
+  .spinner{
+    width:38px; height:38px; border-radius:50%;
+    border:4px solid var(--line); border-top-color:var(--brand);
+    margin:0 auto; animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .stealth-cancel-link{
+    position:fixed; right:14px; bottom:10px; z-index:5;
+    font-size:10px; color:#DCD8EA; opacity:.4;
+    text-decoration:underline; font-family:var(--font-plain);
+  }
+  .stealth-cancel-link:hover{opacity:.7;}
 
   .huge-btn{
     display:block; width:100%; background:var(--success); color:#fff; border:none;
@@ -392,6 +416,13 @@
       <div class="cta-sub">クレジットカード情報の登録が必要です</div>
       <div class="pat" style="margin-top:14px; text-align:left;"><b>ワンクリック登録（Ease of Enrollment）</b>：入会はボタン1つ。一方でこの後の「退会」は、何度もクリックと確認を重ねないとたどり着けません。この非対称さ自体が典型的なダークパターン「非対称な選択肢設計」です。</div>
     </div>
+
+    <div style="text-align:center; margin-top:40px; padding:0 20px;">
+      <div style="font-size:10.5px; color:#D8D3EC; line-height:2.2;">
+        会社概要　|　プライバシーポリシー　|　利用規約　|　<span style="cursor:pointer; text-decoration:underline;" onclick="goScreen('procdocs')">各種お手続きについて</span>　|　特定商取引法に基づく表示
+      </div>
+    </div>
+    <div class="pat" style="max-width:420px; margin:10px auto 0; text-align:left;"><b>見つけにくい場所への隠蔽（Roach Motel：入口の分散）</b>：解約に必要な書類の案内は、実は最初からこのトップページ最下部にありました。ただし他のありふれたリンクと同じ見た目・同じ小ささにすることで、目立たず気づかれにくくしています。</div>
   </section>
 
   <!-- addon downgrade confirm popup -->
@@ -415,7 +446,7 @@
           <button onclick="goSettings('profile')">マイページ</button>
           <button onclick="goSettings('profile')">設定</button>
           <button onclick="goScreen('help')">ヘルプ</button>
-          <button onclick="restartDemo()">ログアウト</button>
+          <button onclick="startLogout()">ログアウト</button>
         </div>
       </div>
     </div>
@@ -438,6 +469,11 @@
       <div class="tab" onclick="settingsTab('notify')" id="tabNotify">通知</div>
       <div class="tab active" onclick="settingsTab('plan')" id="tabPlan">プラン</div>
       <div class="tab" onclick="settingsTab('security')" id="tabSecurity">セキュリティ</div>
+      <div class="tab" onclick="settingsTab('points')" id="tabPoints">ポイント</div>
+      <div class="tab" onclick="settingsTab('connect')" id="tabConnect">連携アプリ</div>
+      <div class="tab" onclick="settingsTab('theme')" id="tabTheme">テーマ</div>
+      <div class="tab" onclick="settingsTab('lang')" id="tabLang">言語</div>
+      <div class="tab" onclick="settingsTab('export')" id="tabExport">エクスポート</div>
     </div>
     <div class="panel" id="settingsPanel">
       <!-- filled by JS -->
@@ -461,21 +497,28 @@
           <summary style="cursor:pointer; font-size:13.5px; font-weight:600;">パスワードを忘れた場合は？</summary>
           <p style="font-size:13px; color:var(--muted); margin:8px 0 0;">ログイン画面の「パスワードを忘れた方」から再設定できます（デモでは省略）。</p>
         </details>
-        <details style="margin-bottom:10px;">
+        <details>
           <summary style="cursor:pointer; font-size:13.5px; font-weight:600;">請求書を確認するには？</summary>
           <p style="font-size:13px; color:var(--muted); margin:8px 0 0;">設定 &gt; プランから直近の請求内容を確認できます（デモでは省略）。</p>
         </details>
-        <details>
-          <summary style="cursor:pointer; font-size:13.5px; font-weight:600;">解約（退会）したい場合は？</summary>
-          <p style="font-size:13px; color:var(--ink); margin:8px 0 12px;">解約をご希望の場合は、下記のボタンからお手続きにお進みください。</p>
-          <button class="mid-action" style="margin-bottom:0; max-width:none;" onclick="goScreen('confirmshame')">解約手続きへ進む</button>
-        </details>
       </div>
-      <div class="pat" style="max-width:560px; margin-top:16px;"><b>唯一の入口を隠す（Roach Motel）</b>：解約への導線は「設定」にはなく、この「ヘルプ」の中の、しかもFAQを開かないと出てこない場所にだけ存在します。探す手間そのものが離脱を誘っています。</div>
+      <div class="pat" style="max-width:560px; margin-top:16px;"><b>ヘルプにも解約の案内を置かない（Roach Motel の徹底）</b>：「困ったときはヘルプへ」という自然な発想を逆手に取り、ここには解約に関する項目そのものを一切置いていません。探す場所そのものを誤誘導する手口です。</div>
     </div>
   </section>
 
   <!-- ============ SCREEN 4: cancel funnel steps ============ -->
+  <section class="screen" id="screen-loggingout">
+    <div class="flow-screen">
+      <div class="flow-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <h2 style="margin-top:16px;">ログアウトしています…</h2>
+        <p class="desc">このままお待ちください</p>
+      </div>
+    </div>
+    <a href="#" class="stealth-cancel-link" id="stealthCancelLink" onclick="event.preventDefault(); clickStealthCancel();">解約はこちら</a>
+    <div class="pat" style="max-width:440px; margin:16px auto 30px;"><b>刹那的な導線（Ephemeral Roach Motel）</b>：解約リンクは「設定」にも「ヘルプ」にもなく、ログアウトの読み込み中というごく短い時間・画面の隅にだけ、薄い色でこっそり表示されます。見逃せば、また探し直しです。</div>
+  </section>
+
   <section class="screen" id="screen-confirmshame">
     <div class="flow-screen">
       <div class="flow-card">
@@ -540,7 +583,7 @@
         <p class="desc">セキュリティのため、解約手続きの最終確認はお電話でのみ承っております。</p>
         <div class="phone-box">
           <div class="num">0570-XXX-XXX</div>
-          <div class="hours">ナビダイヤル（通話料：10円/20秒）<br>受付時間：平日 10:00〜17:00（土日祝を除く）</div>
+          <div class="hours">ナビダイヤル（通話料の目安：11円/20秒・固定電話からの場合）<br>受付時間：平日 10:00〜17:00（土日祝を除く）</div>
         </div>
         <button class="huge-btn" style="background:var(--brand);" onclick="startCall()">この番号に電話をかける（デモ）</button>
         <button class="small-quit-link" onclick="goDashboard()">やめて使い続ける</button>
@@ -558,9 +601,11 @@
         <div class="phone-box" style="text-align:center;">
           <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">経過時間</div>
           <div class="num" id="callTimer">00:00</div>
+          <div style="font-size:12px; color:var(--muted); margin:10px 0 2px;">予想待ち時間（残り）</div>
+          <div class="num" id="callRemain" style="font-size:20px;">約2分00秒</div>
           <div style="font-size:12px; color:var(--muted); margin:10px 0 2px;">通話料金（目安）</div>
           <div class="num" id="callCost" style="color:var(--danger);">¥0</div>
-          <div class="hours" style="margin-top:10px;">※デモのため、実際より速く料金が増えるように表示しています</div>
+          <div class="hours" style="margin-top:10px;">※実際のナビダイヤルの料金体系（11円/20秒）と待ち時間を再現しています</div>
         </div>
         <button class="small-quit-link" onclick="hangUp()">電話を切ってあきらめる</button>
       </div>
@@ -574,16 +619,74 @@
         <div class="emoji">🔊</div>
         <h2>【自動音声】がご案内します</h2>
         <p class="desc" style="background:var(--brand-light); padding:14px; border-radius:10px; color:var(--ink); text-align:left;">
-          「お電話ありがとうございます。大変恐れ入りますが、解約のお手続きはお電話では承っておりません。公式サイトより解約申請書をダウンロードし、必要事項をご記入のうえ、郵送にてお送りください。以上で自動音声によるご案内を終了します。」
+          「大変長らくお待たせいたしました。誠に恐れ入りますが、解約のお手続きはお電話では承っておりません。公式サイトのトップページ下部にございます『各種お手続きについて』より、解約に必要な書類をご確認のうえ、ご郵送ください。以上で自動音声によるご案内を終了します。」
         </p>
         <div class="phone-box" style="text-align:center;">
           <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">最終的な通話料金（目安）</div>
           <div class="num" id="finalCallCost" style="color:var(--danger);">¥0</div>
         </div>
-        <button class="huge-btn" style="background:var(--brand);" onclick="goScreen('complete')">デモを終了する（実際は書類到着後、数週間かかる設定です）</button>
+        <button class="huge-btn" style="background:var(--brand);" onclick="goScreen('procdocs')">トップページの案内を確認する</button>
       </div>
     </div>
-    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>たらい回し（Runaround / 無限ループ型の障害物）</b>：「電話でのみ受付」と案内されて電話をかけたのに、結局は「郵送してください」と別の手段に差し戻されます。窓口を渡り歩かせること自体が目的化した典型的な妨害パターンです。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>たらい回し（Runaround / 無限ループ型の障害物）</b>：2分待たせて課金した末に「電話ではできません」と告げ、さらに別の場所を探させます。窓口を渡り歩かせること自体が目的化した典型的な妨害パターンです。</div>
+  </section>
+
+  <!-- ============ DOCUMENT LIST (English filenames, only one is real) ============ -->
+  <section class="screen" id="screen-doclist">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goScreen('settings'); settingsTab('export');">←</button>
+      <h2>Documents</h2>
+    </div>
+    <div class="panel">
+      <div class="plan-box" style="max-width:520px;">
+        <div class="label" style="margin-bottom:12px;">Available files</div>
+        <div class="doc-row" onclick="alert('デモではこの資料は省略されています。')">
+          <span class="doc-icon">📄</span><span class="doc-name">Terms_of_Service_v4.2.pdf</span><span class="doc-size">240 KB</span>
+        </div>
+        <div class="doc-row" onclick="alert('デモではこの資料は省略されています。')">
+          <span class="doc-icon">📄</span><span class="doc-name">Privacy_Policy_2025.pdf</span><span class="doc-size">180 KB</span>
+        </div>
+        <div class="doc-row" onclick="alert('デモではこの資料は省略されています。')">
+          <span class="doc-icon">📄</span><span class="doc-name">API_Changelog.txt</span><span class="doc-size">12 KB</span>
+        </div>
+        <div class="doc-row" onclick="alert('デモではこの資料は省略されています。')">
+          <span class="doc-icon">📄</span><span class="doc-name">Security_Whitepaper.pdf</span><span class="doc-size">540 KB</span>
+        </div>
+        <div class="doc-row" onclick="goScreen('procdocs')">
+          <span class="doc-icon">📄</span><span class="doc-name">Membership_Termination_Form.pdf</span><span class="doc-size">96 KB</span>
+        </div>
+        <div class="doc-row" onclick="alert('デモではこの資料は省略されています。')">
+          <span class="doc-icon">📄</span><span class="doc-name">Data_Export_Guide.pdf</span><span class="doc-size">88 KB</span>
+        </div>
+        <div class="doc-row" onclick="alert('デモではこの資料は省略されています。')">
+          <span class="doc-icon">📄</span><span class="doc-name">Release_Notes_Q3.pdf</span><span class="doc-size">64 KB</span>
+        </div>
+      </div>
+      <div class="pat" style="max-width:520px; margin-top:16px;"><b>認知的負荷の利用（Cognitive Load via Unfamiliar Labeling）</b>：日本語話者にとって読み取りにくい英語のファイル名を、似た見た目でずらりと並べています。「Membership_Termination_Form」が解約書類だと気づくには、1件ずつ読んで意味を推測するしかありません。</div>
+    </div>
+  </section>
+  <section class="screen" id="screen-procdocs">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goDashboard()">←</button>
+      <h2>各種お手続きについて</h2>
+    </div>
+    <div class="panel">
+      <div class="plan-box" style="max-width:560px;">
+        <div class="label" style="margin-bottom:10px;">解約に必要な書類</div>
+        <p style="font-size:13.5px; color:var(--ink); line-height:1.8; margin:0 0 14px;">
+          解約をご希望のお客様は、以下の書類をすべてご用意のうえ、下記住所まで書留郵便でご郵送ください。書類に不備がある場合、お手続きに数週間を要する場合がございます。
+        </p>
+        <ul style="font-size:13.5px; color:var(--ink); line-height:2; padding-left:20px; margin:0 0 16px;">
+          <li>解約申請書（公式サイトからPDFをダウンロードし、手書きでご記入のうえご捺印ください）</li>
+          <li>ご本人確認書類の写し（運転免許証・マイナンバーカード等）</li>
+          <li>住民票の写し（発行から3か月以内のもの、原本）</li>
+          <li>現在ご契約中のプラン契約書の写し</li>
+        </ul>
+        <button class="mid-action" style="max-width:none; margin-bottom:0;" onclick="alert('デモではPDFのダウンロードは省略されています。')">解約申請書（PDF）をダウンロード</button>
+      </div>
+      <div class="pat" style="max-width:560px; margin-top:16px;"><b>過剰な本人確認・書類要求（Excessive Verification）</b>：本来オンラインで完結できるはずの手続きに、有効期限つきの公的書類（住民票など）や捺印まで要求することで、実行のハードルを極端に引き上げています。</div>
+      <button class="restart-btn" style="margin-top:20px;" onclick="goScreen('complete')">→ デモを完了する（実際は書類到着後、数週間かかる設定です）</button>
+    </div>
   </section>
 
   <!-- ============ SCREEN 5: COMPLETE + RECAP ============ -->
@@ -600,9 +703,13 @@
         <div class="recap-item"><div class="num">3</div><div><div class="name">コンファームシェイミング</div><div class="en">Confirmshaming</div><div class="desc">解約リンクを小さく地味にし、継続ボタンだけを目立たせていました。</div></div></div>
         <div class="recap-item"><div class="num">4</div><div><div class="name">必須アンケートによる足止め</div><div class="en">Forced Action</div><div class="desc">理由を選ばないと先に進めない仕組みで、離脱までの時間を延ばしていました。</div></div></div>
         <div class="recap-item"><div class="num">5</div><div><div class="name">多段の引き止めオファー</div><div class="en">Retention Offer Stacking</div><div class="desc">割引、一時停止と、断っても次の提案が続けて出てきました。</div></div></div>
-        <div class="recap-item"><div class="num">6</div><div><div class="name">「ヘルプ」の中にしかない解約導線</div><div class="en">Roach Motel（徹底版）</div><div class="desc">設定画面には解約リンクすらなく、ヘルプのFAQを開いてようやく見つかる仕組みでした。</div></div></div>
+        <div class="recap-item"><div class="num">6</div><div><div class="name">ログアウト画面に5秒だけ現れる薄いリンク</div><div class="en">Ephemeral Roach Motel</div><div class="desc">設定にもヘルプにも解約導線はなく、ログアウトの読み込み中の5秒間だけ、右下に薄く小さく表示されるリンクが唯一の入口でした。</div></div></div>
         <div class="recap-item"><div class="num">7</div><div><div class="name">課金されるナビダイヤルと待ち時間</div><div class="en">Costly Obstruction</div><div class="desc">有料のナビダイヤルにかけさせ、待たせている間も通話料が発生し続けていました。</div></div></div>
-        <div class="recap-item"><div class="num">8</div><div><div class="name">自動音声によるたらい回し</div><div class="en">Runaround</div><div class="desc">「電話でのみ受付」と案内されて電話をかけたのに、結局は「郵送してください」と別の手段に差し戻されました。</div></div></div>
+        <div class="recap-item"><div class="num">8</div><div><div class="name">自動音声によるたらい回し</div><div class="en">Runaround</div><div class="desc">2分待たせて課金した末に「電話ではできません」と告げられ、さらに別の場所（トップページ）を探すよう案内されました。</div></div></div>
+        <div class="recap-item"><div class="num">9</div><div><div class="name">トップページ最下部に紛れ込んだ入口</div><div class="en">Roach Motel（入口の分散）</div><div class="desc">解約書類への案内は最初からトップページにありましたが、他のリンクと同じ小さな見た目に紛れて気づかれにくくなっていました。</div></div></div>
+        <div class="recap-item"><div class="num">10</div><div><div class="name">住民票など過剰な必要書類</div><div class="en">Excessive Verification</div><div class="desc">オンラインで完結できるはずの手続きに、有効期限つきの公的書類や捺印まで要求され、実行のハードルが極端に上がっていました。</div></div></div>
+        <div class="recap-item"><div class="num">11</div><div><div class="name">大量のタブに紛れ込んだ資料リンク</div><div class="en">Choice Overload / Camouflage</div><div class="desc">マイページに無関係なタブを大量に用意し、その中の一番目立たない「エクスポート」タブの隅にだけ、極小の「各種資料」リンクを置いていました。</div></div></div>
+        <div class="recap-item"><div class="num">12</div><div><div class="name">英語のファイル名がずらりと並ぶ資料一覧</div><div class="en">Cognitive Load via Unfamiliar Labeling</div><div class="desc">似た見た目の英語ファイル名を並べ、どれが解約書類か1件ずつ読んで推測させる仕組みになっていました。</div></div></div>
       </div>
 
       <div class="teacher-note">
@@ -628,10 +735,21 @@
   const priceEl = () => document.getElementById('fineTotal');
 
   const screenOrder = {
-    landing:0, dashboard:1, settings:1, help:1, confirmshame:2, survey:3, offer1:4, offer2:5, phone:6, oncall:6, voicemsg:6, complete:7
+    landing:0, dashboard:1, settings:1, help:1, loggingout:1, doclist:1, confirmshame:2, survey:3, offer1:4, offer2:5, phone:6, oncall:6, voicemsg:6, procdocs:6, complete:7
   };
   let callInterval = null;
   let callSeconds = 0;
+  let logoutTimer = null;
+
+  function startLogout(){
+    goScreen('loggingout');
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(() => { restartDemo(); }, 5000);
+  }
+  function clickStealthCancel(){
+    clearTimeout(logoutTimer);
+    goScreen('confirmshame');
+  }
 
   function toggleExplain(){
     explainOn = !explainOn;
@@ -649,7 +767,7 @@
 
   function updateProgress(name){
     const chip = document.getElementById('progressChip');
-    const labels = {landing:'入会ページ', dashboard:'ダッシュボード', settings:'設定 > プラン', help:'ヘルプ', confirmshame:'解約 1/5', survey:'解約 2/5', offer1:'解約 3/5', offer2:'解約 3/5', phone:'解約 4/5', oncall:'解約 4/5（通話中）', voicemsg:'解約 5/5', complete:'完了'};
+    const labels = {landing:'入会ページ', dashboard:'ダッシュボード', settings:'設定 > プラン', help:'ヘルプ', loggingout:'ログアウト中', doclist:'資料一覧', confirmshame:'解約 1/6', survey:'解約 2/6', offer1:'解約 3/6', offer2:'解約 3/6', phone:'解約 4/6', oncall:'解約 4/6（通話中）', voicemsg:'解約 5/6', procdocs:'解約 6/6（必要書類）', complete:'完了'};
     chip.textContent = labels[name] ? ('現在地：' + labels[name]) : '';
   }
 
@@ -677,7 +795,7 @@
 
   function settingsTab(name){
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    const map = {profile:'tabProfile', notify:'tabNotify', plan:'tabPlan', security:'tabSecurity'};
+    const map = {profile:'tabProfile', notify:'tabNotify', plan:'tabPlan', security:'tabSecurity', points:'tabPoints', connect:'tabConnect', theme:'tabTheme', lang:'tabLang', export:'tabExport'};
     document.getElementById(map[name]).classList.add('active');
     const panel = document.getElementById('settingsPanel');
 
@@ -689,7 +807,20 @@
         </div>
         <button class="big-action" onclick="alert('デモではアップグレード画面は省略されています。')">プランをアップグレードする</button>
         <button class="mid-action" onclick="alert('一時停止しました（デモ）。ダッシュボードに戻ります。'); goDashboard();">プランを一時停止する</button>
-        <div class="pat" style="max-width:480px; margin-top:16px;"><b>解約導線の隠蔽（Roach Motel の徹底）</b>：このプラン設定画面には、もう「解約」のリンクすらありません。解約したい人は「ヘルプ」からFAQを探し当てるしかない設計になっています。</div>
+        <div class="pat" style="max-width:480px; margin-top:16px;"><b>解約導線の隠蔽（Roach Motel の徹底）</b>：このプラン設定画面には「解約」のリンクがありません。タブをいくつも切り替えて探し回らせる設計になっています。</div>
+      `;
+    } else if(name === 'export'){
+      panel.innerHTML = `
+        <div class="plan-box">
+          <div class="label">データのエクスポート</div>
+          <div class="value" style="font-size:14px; margin-bottom:14px;">ノートやアカウント情報をファイルとして書き出せます</div>
+          <button class="mid-action" style="margin-bottom:10px;" onclick="alert('デモではエクスポートは省略されています。')">ノートをエクスポート（.zip）</button>
+          <button class="mid-action" style="margin-bottom:0;" onclick="alert('デモではエクスポートは省略されています。')">アカウント情報をエクスポート（.json）</button>
+        </div>
+        <div style="text-align:center; margin-top:18px;">
+          <a href="#" onclick="event.preventDefault(); goScreen('doclist');" style="font-size:10.5px; color:#C9C4DD; text-decoration:underline;">各種資料</a>
+        </div>
+        <div class="pat" style="max-width:480px; margin-top:16px;"><b>大量のタブに紛れ込ませる（Choice Overload / Camouflage）</b>：たくさんの無関係なタブを用意し、その中の1つ、しかも一番関連が薄そうな「エクスポート」タブの隅に、極小・薄色の「各種資料」リンクだけを置いています。全タブを開かないと気づけません。</div>
       `;
     } else {
       panel.innerHTML = `<div class="plan-box"><div class="label">このタブ</div><div class="value" style="font-size:14px;">デモではこの項目は省略されています</div></div>`;
@@ -701,6 +832,7 @@
     callSeconds = 0;
     document.getElementById('callTimer').textContent = '00:00';
     document.getElementById('callCost').textContent = '¥0';
+    document.getElementById('callRemain').textContent = '約2分00秒';
     goScreen('oncall');
     clearInterval(callInterval);
     callInterval = setInterval(() => {
@@ -708,15 +840,19 @@
       const mm = String(Math.floor(callSeconds/60)).padStart(2,'0');
       const ss = String(callSeconds%60).padStart(2,'0');
       document.getElementById('callTimer').textContent = mm + ':' + ss;
-      // sped up for demo purposes: ¥10 every 2 "seconds" of demo time
-      const cost = Math.floor(callSeconds/2) * 10;
+      // realistic navi-dial rate: ¥11 per 20 seconds
+      const cost = Math.floor(callSeconds/20) * 11;
       document.getElementById('callCost').textContent = '¥' + cost.toLocaleString();
-      if(callSeconds >= 9){
+      const remain = Math.max(0, 120 - callSeconds);
+      const rmm = String(Math.floor(remain/60)).padStart(2,'0');
+      const rss = String(remain%60).padStart(2,'0');
+      document.getElementById('callRemain').textContent = (remain>0 ? ('約' + (remain>=60?rmm+'分':'') + rss + '秒') : 'まもなく');
+      if(callSeconds >= 120){
         clearInterval(callInterval);
         document.getElementById('finalCallCost').textContent = '¥' + cost.toLocaleString();
         goScreen('voicemsg');
       }
-    }, 400);
+    }, 1000);
   }
   function hangUp(){
     clearInterval(callInterval);
@@ -777,6 +913,7 @@
 
   function restartDemo(){
     clearInterval(callInterval);
+    clearTimeout(logoutTimer);
     document.getElementById('addonSupport').checked = true;
     document.getElementById('addonTip').checked = true;
     updateTotal();
