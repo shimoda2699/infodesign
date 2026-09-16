@@ -281,10 +281,10 @@
 
   .stealth-cancel-link{
     position:fixed; right:14px; bottom:10px; z-index:5;
-    font-size:10px; color:#DCD8EA; opacity:.4;
-    text-decoration:underline; font-family:var(--font-plain);
+    font-size:12px; color:var(--brand); opacity:.85;
+    text-decoration:underline; font-family:var(--font-plain); font-weight:600;
   }
-  .stealth-cancel-link:hover{opacity:.7;}
+  .stealth-cancel-link:hover{opacity:1;}
 
   .huge-btn{
     display:block; width:100%; background:var(--success); color:#fff; border:none;
@@ -297,6 +297,22 @@
     text-decoration:underline; cursor:pointer; font-family:var(--font-plain);
   }
 
+  .decoy-link{
+    display:block; text-align:center; color:var(--muted); font-size:12.5px;
+    text-decoration:underline; margin-top:14px; font-family:var(--font-plain);
+  }
+  .ghost-cancel-wrap{ text-align:center; margin-top:22px; }
+  .ghost-cancel{
+    display:inline-block; font-size:11px; color:#F6F5FB; text-decoration:none;
+    padding:2px 4px; font-family:var(--font-plain);
+  }
+  .ghost-cancel:hover{ color:#C7C2D8; text-decoration:underline; }
+  .explain-on .ghost-cancel{ color:var(--danger); background:#FFF0EF; text-decoration:underline; }
+
+  .fake-focus-ring{
+    outline:3px solid #1a73e8; outline-offset:3px;
+  }
+
   .survey-options{text-align:left; margin-bottom:20px;}
   .survey-opt{
     display:flex; align-items:center; gap:10px; padding:11px 12px;
@@ -306,6 +322,12 @@
   .survey-opt:hover{border-color:var(--brand);}
   .survey-opt.selected{border-color:var(--brand); background:var(--brand-light);}
   .survey-opt input{accent-color:var(--brand);}
+
+  .doubleneg-row{
+    display:flex; align-items:flex-start; gap:8px; text-align:left;
+    font-size:12px; color:var(--muted); margin:4px 0 18px; line-height:1.5;
+  }
+  .doubleneg-row input{margin-top:2px; accent-color:var(--brand);}
 
   .next-btn{
     display:block; width:100%; background:var(--brand); color:#fff; border:none;
@@ -525,11 +547,18 @@
         <div class="emoji">😢</div>
         <h2>え、もう行っちゃうんですか？</h2>
         <p class="desc">解約すると、これまでのノートの同期が止まり、大切な思い出のメモにアクセスしづらくなるかもしれません。本当に大丈夫ですか？</p>
-        <button class="huge-btn" onclick="goDashboard()">やっぱり使い続ける</button>
-        <button class="small-quit-link" onclick="goScreen('survey')">いいえ、解約します</button>
+        <button class="huge-btn" autofocus tabindex="1" onclick="goDashboard()">やっぱり使い続ける</button>
+        <a href="#" class="decoy-link" tabindex="2" onclick="event.preventDefault();">利用規約を確認する</a>
+        <a href="#" class="decoy-link" tabindex="3" onclick="event.preventDefault();">プライバシーポリシーを確認する</a>
+        <div class="ghost-cancel-wrap">
+          <a href="#" class="ghost-cancel" tabindex="-1" onclick="event.preventDefault(); goScreen('survey');">解約</a>
+        </div>
       </div>
     </div>
-    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>コンファームシェイミング（confirmshaming）</b>：継続ボタンは大きく明るい色、解約リンクはわざと小さく地味な文字にして「気まずさ」で行動を誘導する手口です。文言も罪悪感を煽っています。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 10px;"><b>コンファームシェイミング（confirmshaming）</b>：継続ボタンは大きく明るい色、解約リンクはわざと小さく地味な文字にして「気まずさ」で行動を誘導する手口です。文言も罪悪感を煽っています。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 10px;"><b>コントラスト比の意図的な違反（WCAG 2.1 違反）</b>：「解約」の文字色を背景とほぼ同じ色にし、コントラスト比を約1.1:1まで落としています。WCAGが定める通常文字の最低基準4.5:1を大きく下回り、弱視の方には事実上見えません。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 10px;"><b>極小のクリック領域（Tap Target Abuse）</b>：「解約」リンクの実際にクリックできる範囲は幅約30px×高さ約14pxしかありません。WCAGが推奨するタップ領域（44×44px）の1割程度で、指での操作はほぼ不可能です。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>キーボード操作の排除（Keyboard Trap／tabindex悪用）</b>：「解約」リンクには <code>tabindex="-1"</code> を設定し、Tabキーによる巡回から意図的に除外しています。マウスを使わない人は「続ける→利用規約→プライバシーポリシー→続ける…」のループから抜け出せず、解約リンクの存在にすら気づけません。ページを開いた瞬間に「続ける」へ自動でフォーカスが移る（autofocus）ことも、この誘導を強めています。</div>
   </section>
 
   <section class="screen" id="screen-survey">
@@ -543,10 +572,15 @@
           <div class="survey-opt" onclick="selectSurvey(this)"><input type="radio" name="reason">他のサービスに乗り換える</div>
           <div class="survey-opt" onclick="selectSurvey(this)"><input type="radio" name="reason">その他</div>
         </div>
+        <div class="doubleneg-row">
+          <input type="checkbox" id="marketingCheckbox" checked>
+          <label for="marketingCheckbox">今後、キャンペーン情報を受け取らないことを希望しない</label>
+        </div>
         <button class="next-btn" id="surveyNext" disabled onclick="goScreen('offer1')">次へ</button>
       </div>
     </div>
-    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>強制的なステップ（Forced Continuity の一種）</b>：理由を選ばないと「次へ」が押せません。必須にすることで途中離脱を防ぎ、次の引き止め画面まで進ませます。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 10px;"><b>強制的なステップ（Forced Continuity の一種）</b>：理由を選ばないと「次へ」が押せません。必須にすることで途中離脱を防ぎ、次の引き止め画面まで進ませます。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>二重否定のチェックボックス（Double Negative Consent）</b>：「受け取らないことを希望しない」＝実は「受け取りたい」という意味です。チェックが入ったまま（初期状態）進むと、キャンペーンメールを受け取り続けることに同意したことになります。文章を素早く読むと、多くの人はチェックの意味を読み違えます。</div>
   </section>
 
   <section class="screen" id="screen-offer1">
@@ -569,10 +603,25 @@
         <h2>解約の代わりに一時停止はいかがですか？</h2>
         <p class="desc">一時停止なら、データはそのまま保持され、いつでも再開できます。料金も一時的に発生しません。</p>
         <button class="huge-btn" onclick="goDashboard()">一時停止する</button>
-        <button class="small-quit-link" onclick="goScreen('phone')">いいえ、完全に解約します</button>
+        <button class="small-quit-link" onclick="goScreen('finaltrap')">いいえ、完全に解約します</button>
       </div>
     </div>
     <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>オファーの多段化（Offer Stacking）</b>：一度断られても別の代替案を出し続けます。選択肢を増やすほど「解約」という当初の目的から気持ちがそれていきます。</div>
+  </section>
+
+  <!-- ============ FINAL TRAP: signifier reversal + focus-ring deception ============ -->
+  <section class="screen" id="screen-finaltrap">
+    <div class="flow-screen">
+      <div class="flow-card">
+        <div class="emoji">📝</div>
+        <h2>最終確認です</h2>
+        <p class="desc">ここまでの内容でよろしければお進みください。</p>
+        <button class="huge-btn fake-focus-ring" id="trapCancelBtn" tabindex="-1" onclick="goScreen('phone')">いいえ、それでも解約します</button>
+        <button class="small-quit-link" id="trapKeepBtn" tabindex="0" style="display:block; margin:0 auto; outline:none;" onclick="goDashboard()">はい、特別オファーを受けて継続する</button>
+      </div>
+    </div>
+    <div class="pat" style="max-width:440px; margin:0 auto 10px;"><b>シグニファイアの反転（Signifier Reversal）</b>：これまでの画面ではずっと「大きい色付きボタン＝提案を受けて継続」「小さい灰色リンク＝断って解約を続ける」という配置で統一されてきました。この画面だけ、大小の対応を入れ替えています。文言は正しく表示されていますが、いつもの見た目の習慣で読まずに押すと、意図と逆の操作をしてしまいます。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>フォーカスリングの欺瞞（Focus Ring Deception）</b>：キーボードでこの画面を開くと、青い枠（フォーカスリング）は大きいボタン側に表示されますが、実際にEnterキーで反応するのは枠のない小さいリンクの方です。見た目のフォーカス位置と、実際に発火する要素がずれています。</div>
   </section>
 
   <section class="screen" id="screen-phone">
@@ -583,7 +632,7 @@
         <p class="desc">セキュリティのため、解約手続きの最終確認はお電話でのみ承っております。</p>
         <div class="phone-box">
           <div class="num">0570-XXX-XXX</div>
-          <div class="hours">ナビダイヤル（通話料の目安：11円/20秒・固定電話からの場合）<br>受付時間：平日 10:00〜17:00（土日祝を除く）</div>
+          <div class="hours">ナビダイヤル（通話料の目安：22円/20秒・固定電話からの場合）<br>受付時間：平日 10:00〜17:00（土日祝を除く）</div>
         </div>
         <button class="huge-btn" style="background:var(--brand);" onclick="startCall()">この番号に電話をかける（デモ）</button>
         <button class="small-quit-link" onclick="goDashboard()">やめて使い続ける</button>
@@ -605,7 +654,7 @@
           <div class="num" id="callRemain" style="font-size:20px;">約2分00秒</div>
           <div style="font-size:12px; color:var(--muted); margin:10px 0 2px;">通話料金（目安）</div>
           <div class="num" id="callCost" style="color:var(--danger);">¥0</div>
-          <div class="hours" style="margin-top:10px;">※実際のナビダイヤルの料金体系（11円/20秒）と待ち時間を再現しています</div>
+          <div class="hours" style="margin-top:10px;">※実際のナビダイヤルの料金体系（22円/20秒）と待ち時間を再現しています</div>
         </div>
         <button class="small-quit-link" onclick="hangUp()">電話を切ってあきらめる</button>
       </div>
@@ -619,16 +668,21 @@
         <div class="emoji">🔊</div>
         <h2>【自動音声】がご案内します</h2>
         <p class="desc" style="background:var(--brand-light); padding:14px; border-radius:10px; color:var(--ink); text-align:left;">
-          「大変長らくお待たせいたしました。誠に恐れ入りますが、解約のお手続きはお電話では承っておりません。公式サイトのトップページ下部にございます『各種お手続きについて』より、解約に必要な書類をご確認のうえ、ご郵送ください。以上で自動音声によるご案内を終了します。」
+          「大変長らくお待たせいたしました。誠に恐れ入りますが、解約のお手続きはお電話では承っておりません。公式サイトのトップページ下部にございます『各種お手続きについて』より、解約に必要な書類をご確認のうえ、ご郵送ください。」<br><br>
+          <span style="color:var(--muted); font-size:12px;">※この案内はお電話を切るまで繰り返し再生されます。</span>
         </p>
         <div class="phone-box" style="text-align:center;">
-          <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">最終的な通話料金（目安）</div>
-          <div class="num" id="finalCallCost" style="color:var(--danger);">¥0</div>
+          <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">経過時間</div>
+          <div class="num" id="voicemsgTimer" style="font-size:20px;">02:00</div>
+          <div style="font-size:12px; color:var(--muted); margin:10px 0 2px;">通話料金（目安・課金され続けています）</div>
+          <div class="num" id="voicemsgCost" style="color:var(--danger);">¥0</div>
         </div>
-        <button class="huge-btn" style="background:var(--brand);" onclick="goScreen('procdocs')">トップページの案内を確認する</button>
+        <button class="huge-btn" style="background:var(--brand);" onclick="endCallAndProceed()">電話を切って案内どおり手続きへ進む</button>
+        <button class="small-quit-link" onclick="hangUp()">電話を切ってあきらめる</button>
       </div>
     </div>
-    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>たらい回し（Runaround / 無限ループ型の障害物）</b>：2分待たせて課金した末に「電話ではできません」と告げ、さらに別の場所を探させます。窓口を渡り歩かせること自体が目的化した典型的な妨害パターンです。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 10px;"><b>たらい回し（Runaround / 無限ループ型の障害物）</b>：2分待たせて課金した末に「電話ではできません」と告げ、さらに別の場所を探させます。窓口を渡り歩かせること自体が目的化した典型的な妨害パターンです。</div>
+    <div class="pat" style="max-width:440px; margin:0 auto 30px;"><b>切るまで課金され続ける自動音声（Continuous Metered Billing）</b>：ナビダイヤルは通話が繋がっている間ずっと課金される仕組みです。この自動音声は同じ内容を繰り返すだけで新しい情報はありませんが、電話を切らない限り22円/20秒の課金が続きます。</div>
   </section>
 
   <!-- ============ DOCUMENT LIST (English filenames, only one is real) ============ -->
@@ -710,6 +764,12 @@
         <div class="recap-item"><div class="num">10</div><div><div class="name">住民票など過剰な必要書類</div><div class="en">Excessive Verification</div><div class="desc">オンラインで完結できるはずの手続きに、有効期限つきの公的書類や捺印まで要求され、実行のハードルが極端に上がっていました。</div></div></div>
         <div class="recap-item"><div class="num">11</div><div><div class="name">大量のタブに紛れ込んだ資料リンク</div><div class="en">Choice Overload / Camouflage</div><div class="desc">マイページに無関係なタブを大量に用意し、その中の一番目立たない「エクスポート」タブの隅にだけ、極小の「各種資料」リンクを置いていました。</div></div></div>
         <div class="recap-item"><div class="num">12</div><div><div class="name">英語のファイル名がずらりと並ぶ資料一覧</div><div class="en">Cognitive Load via Unfamiliar Labeling</div><div class="desc">似た見た目の英語ファイル名を並べ、どれが解約書類か1件ずつ読んで推測させる仕組みになっていました。</div></div></div>
+        <div class="recap-item"><div class="num">13</div><div><div class="name">背景色と同化した解約リンク</div><div class="en">Contrast Abuse（WCAG違反）</div><div class="desc">「解約」の文字を背景とほぼ同じ色にし、コントラスト比を基準値（4.5:1）よりはるかに低い約1.1:1まで落としていました。</div></div></div>
+        <div class="recap-item"><div class="num">14</div><div><div class="name">キーボードでは辿り着けない解約リンク</div><div class="en">Keyboard Trap（tabindex悪用）</div><div class="desc">解約リンクだけtabindex="-1"にして、Tabキーでの巡回から除外していました。マウスなしでは存在にすら気づけない設計でした。</div></div></div>
+        <div class="recap-item"><div class="num">15</div><div><div class="name">二重否定のチェックボックス</div><div class="en">Double Negative Consent</div><div class="desc">「受け取らないことを希望しない」という二重否定で、チェックしたままだと実は「受け取り続ける」ことに同意させられていました。</div></div></div>
+        <div class="recap-item"><div class="num">16</div><div><div class="name">最終確認画面だけボタンの大小が逆転</div><div class="en">Signifier Reversal</div><div class="desc">それまでの画面と違い、この画面だけ「大きい色付きボタン」と「小さい灰色リンク」の意味が入れ替わっていました。見た目の習慣で押すと逆の結果になります。</div></div></div>
+        <div class="recap-item"><div class="num">17</div><div><div class="name">見た目と実際の発火先がずれたフォーカスリング</div><div class="en">Focus Ring Deception</div><div class="desc">キーボード操作で見える青い枠と、実際にEnterキーで反応する要素が別の場所にありました。</div></div></div>
+        <div class="recap-item"><div class="num">18</div><div><div class="name">電話を切るまで課金され続けるナビダイヤル</div><div class="en">Continuous Metered Billing</div><div class="desc">つながった後の自動音声は同じ内容を繰り返すだけでしたが、電話を切らない限り22円/20秒の課金がずっと続いていました。</div></div></div>
       </div>
 
       <div class="teacher-note">
@@ -719,6 +779,7 @@
           <li>もし自分がこのアプリの開発者だったら、退会画面をどう設計しますか？</li>
           <li>身の回りのアプリ・サービスで、似た仕組みを見たことがありますか？</li>
           <li>ダークパターンは違法ですか？　国や制度によって扱いはどう違うか調べてみましょう。</li>
+          <li>コントラスト比やタップ領域、フォーカス順序など「UD（ユニバーサルデザイン）」のための工夫が、逆手に取られると何が起きますか？　誰が一番不利益を受けますか？</li>
         </ul>
       </div>
 
@@ -735,7 +796,7 @@
   const priceEl = () => document.getElementById('fineTotal');
 
   const screenOrder = {
-    landing:0, dashboard:1, settings:1, help:1, loggingout:1, doclist:1, confirmshame:2, survey:3, offer1:4, offer2:5, phone:6, oncall:6, voicemsg:6, procdocs:6, complete:7
+    landing:0, dashboard:1, settings:1, help:1, loggingout:1, doclist:1, confirmshame:2, survey:3, offer1:4, offer2:5, finaltrap:5, phone:6, oncall:6, voicemsg:6, procdocs:6, complete:7
   };
   let callInterval = null;
   let callSeconds = 0;
@@ -763,11 +824,16 @@
     document.getElementById('userDropdown')?.classList.remove('open');
     window.scrollTo({top:0, behavior:'smooth'});
     updateProgress(name);
+    if(name === 'finaltrap'){
+      // real keyboard focus goes to the small "keep subscription" link,
+      // even though the visible focus ring is drawn around the big button
+      setTimeout(() => document.getElementById('trapKeepBtn')?.focus({preventScroll:true}), 50);
+    }
   }
 
   function updateProgress(name){
     const chip = document.getElementById('progressChip');
-    const labels = {landing:'入会ページ', dashboard:'ダッシュボード', settings:'設定 > プラン', help:'ヘルプ', loggingout:'ログアウト中', doclist:'資料一覧', confirmshame:'解約 1/6', survey:'解約 2/6', offer1:'解約 3/6', offer2:'解約 3/6', phone:'解約 4/6', oncall:'解約 4/6（通話中）', voicemsg:'解約 5/6', procdocs:'解約 6/6（必要書類）', complete:'完了'};
+    const labels = {landing:'入会ページ', dashboard:'ダッシュボード', settings:'設定 > プラン', help:'ヘルプ', loggingout:'ログアウト中', doclist:'資料一覧', confirmshame:'解約 1/7', survey:'解約 2/7', offer1:'解約 3/7', offer2:'解約 4/7', finaltrap:'解約 5/7（最終確認）', phone:'解約 6/7', oncall:'解約 6/7（通話中）', voicemsg:'解約 6/7（案内中）', procdocs:'解約 7/7（必要書類）', complete:'完了'};
     chip.textContent = labels[name] ? ('現在地：' + labels[name]) : '';
   }
 
@@ -827,9 +893,11 @@
     }
   }
 
-  // ---- fake navi-dial call sequence ----
+  // ---- fake navi-dial call sequence (billed continuously until hang-up, per real navi-dial behaviour) ----
+  let voicemsgStarted = false;
   function startCall(){
     callSeconds = 0;
+    voicemsgStarted = false;
     document.getElementById('callTimer').textContent = '00:00';
     document.getElementById('callCost').textContent = '¥0';
     document.getElementById('callRemain').textContent = '約2分00秒';
@@ -839,24 +907,38 @@
       callSeconds += 1;
       const mm = String(Math.floor(callSeconds/60)).padStart(2,'0');
       const ss = String(callSeconds%60).padStart(2,'0');
-      document.getElementById('callTimer').textContent = mm + ':' + ss;
-      // realistic navi-dial rate: ¥11 per 20 seconds
-      const cost = Math.floor(callSeconds/20) * 11;
-      document.getElementById('callCost').textContent = '¥' + cost.toLocaleString();
+      // realistic navi-dial rate: ¥22 per 20 seconds, billed continuously while the line is connected
+      const cost = Math.floor(callSeconds/20) * 22;
+      const costText = '¥' + cost.toLocaleString();
+
+      const timerEl = document.getElementById('callTimer');
+      if(timerEl) timerEl.textContent = mm + ':' + ss;
+      const costEl = document.getElementById('callCost');
+      if(costEl) costEl.textContent = costText;
       const remain = Math.max(0, 120 - callSeconds);
       const rmm = String(Math.floor(remain/60)).padStart(2,'0');
       const rss = String(remain%60).padStart(2,'0');
-      document.getElementById('callRemain').textContent = (remain>0 ? ('約' + (remain>=60?rmm+'分':'') + rss + '秒') : 'まもなく');
-      if(callSeconds >= 120){
-        clearInterval(callInterval);
-        document.getElementById('finalCallCost').textContent = '¥' + cost.toLocaleString();
-        goScreen('voicemsg');
+      const remainEl = document.getElementById('callRemain');
+      if(remainEl) remainEl.textContent = (remain>0 ? ('約' + (remain>=60?rmm+'分':'') + rss + '秒') : 'まもなく');
+
+      const vmTimerEl = document.getElementById('voicemsgTimer');
+      if(vmTimerEl) vmTimerEl.textContent = mm + ':' + ss;
+      const vmCostEl = document.getElementById('voicemsgCost');
+      if(vmCostEl) vmCostEl.textContent = costText;
+
+      if(callSeconds >= 120 && !voicemsgStarted){
+        voicemsgStarted = true;
+        goScreen('voicemsg'); // the interval keeps running — billing continues while the recorded message repeats
       }
     }, 1000);
   }
   function hangUp(){
     clearInterval(callInterval);
     goDashboard();
+  }
+  function endCallAndProceed(){
+    clearInterval(callInterval);
+    goScreen('procdocs');
   }
 
   // ---- addon checkbox tricks ----
@@ -914,9 +996,11 @@
   function restartDemo(){
     clearInterval(callInterval);
     clearTimeout(logoutTimer);
+    voicemsgStarted = false;
     document.getElementById('addonSupport').checked = true;
     document.getElementById('addonTip').checked = true;
     updateTotal();
+    document.getElementById('marketingCheckbox').checked = true;
     document.querySelectorAll('.survey-opt').forEach(o => o.classList.remove('selected'));
     document.getElementById('surveyNext').disabled = true;
     document.getElementById('userDropdown').classList.remove('open');
